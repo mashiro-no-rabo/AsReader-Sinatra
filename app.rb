@@ -67,6 +67,14 @@ get '/books' do
   erb :books, :locals => {nick: settings.nickname, books: books, stats: stats}
 end
 
+get '/book/:book_id/change_status/:status' do
+  bk = Book.get(params[:book_id])
+  bk.status = params[:status].intern
+  bk.status_changed = DateTime.now
+  bk.save
+  redirect back
+end
+
 get '/import-douban/:db_user' do
 
   uri = URI.parse("https://api.douban.com/")

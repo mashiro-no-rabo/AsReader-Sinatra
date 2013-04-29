@@ -26,7 +26,7 @@
 
       <div class="row-fluid" style="margin-top: 50px;">
 
-        <% stats.each do |status| %>
+        <% stats.each_with_index do |status, index| %>
           <div class="span2">
             <h4>
               <i class="icon-<%= status[:icon] %>"></i>
@@ -36,9 +36,15 @@
             </h4>
             <hr>
             <ul class="unstyled">
-              <% books.all(:status => status[:tag]).each do |b| %>
+              <% books.all(:status => status[:tag], :order => [ :status_changed.desc ]).each do |b| %>
                 <li>
-                  <a style="color: #909090;" href="<%= b["url"] %>"><%= b["title"] %></a>
+                  <% if index > 0 %>
+                    <a href="/book/<%= b["id"]%>/change_status/<%= stats[index-1][:tag].to_s %>">&lt;</a>
+                  <% end %>
+                  <a style="color: #909090;" href="<%= b["url"] %>"> <%= b["title"] %> </a>
+                  <% if index + 1 < stats.length %>
+                    <a href="/book/<%= b["id"]%>/change_status/<%= stats[index+1][:tag].to_s %>">&gt;</a>
+                  <% end %>
                   <span class="pull-right"><%= b["rating"] %></span>
                 </li>
               <% end %>
