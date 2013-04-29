@@ -26,149 +26,25 @@
 
       <div class="row-fluid" style="margin-top: 50px;">
 
-        <div class="span2">
-          <h4>
-            <i class="icon-random"></i>
-            Reference
-            <br>
-            <small>As dictionaries</small>
-          </h4>
-          <hr>
-          <ul class="unstyled">
-            <% reference.each do |b| %>
-              <li>
-              <% if b["rating"] %>
-                <% if b["rating"] < 10 %>
-                  <%= b["rating"] %>
-                <% else %>
-                  !
-                <% end %>
-              <% else %>
-                -
-              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
-            <% end %>
-          </ul>
-        </div>
-
-        <div class="span2">
-          <h4>
-            <i class="icon-book"></i>
-            Reading
-            <br>
-            <small>To upgrade myself</small>
-          </h4>
-          <hr>
-          <ul class="unstyled">
-            <% reading.each do |b| %>
-              <li>
-              <% if b["rating"] %>
-                <% if b["rating"] < 10 %>
-                  <%= b["rating"] %>
-                <% else %>
-                  !
-                <% end %>
-              <% else %>
-                -
-              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
-            <% end %>
-          </ul>
-        </div>
-
-        <div class="span2">
-          <h4>
-            <i class="icon-lock"></i>
-            Holding
-            <br>
-            <small>For a later time</small>
-          </h4>
-          <hr>
-          <ul class="unstyled">
-            <% holding.each do |b| %>
-              <li>
-              <% if b["rating"] %>
-                <% if b["rating"] < 10 %>
-                  <%= b["rating"] %>
-                <% else %>
-                  !
-                <% end %>
-              <% else %>
-                -
-              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
-            <% end %>
-          </ul>
-        </div>
-
-        <div class="span2">
-          <h4>
-            <i class="icon-star"></i>
-            Wish
-            <br>
-            <small>The ocean of human knowledge</small>
-          </h4>
-          <hr>
-          <ul class="unstyled">
-            <% wish.each do |b| %>
-              <li>
-              <% if b["rating"] %>
-                <% if b["rating"] < 10 %>
-                  <%= b["rating"] %>
-                <% else %>
-                  !
-                <% end %>
-              <% else %>
-                -
-              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
-            <% end %>
-          </ul>
-        </div>
-
-        <div class="span2">
-          <h4>
-            <i class="icon-ok"></i>
-            Read
-            <br>
-            <small>In the past</small>
-          </h4>
-          <hr>
-          <ul class="unstyled">
-            <% finished.each do |b| %>
-              <li>
-              <% if b["rating"] %>
-                <% if b["rating"] < 10 %>
-                  <%= b["rating"] %>
-                <% else %>
-                  !
-                <% end %>
-              <% else %>
-                -
-              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
-            <% end %>
-          </ul>
-        </div>
-
-        <div class="span2">
-          <h4>
-            <i class="icon-remove"></i>
-            Dropped
-            <br>
-            <small>Just personally</small>
-          </h4>
-          <hr>
-          <ul class="unstyled">
-            <% dropped.each do |b| %>
-              <li>
-              <% if b["rating"] %>
-                <% if b["rating"] < 10 %>
-                  <%= b["rating"] %>
-                <% else %>
-                  !
-                <% end %>
-              <% else %>
-                -
-              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
-            <% end %>
-          </ul>
-        </div>
+        <% stats.each do |status| %>
+          <div class="span2">
+            <h4>
+              <i class="icon-<%= status[:icon] %>"></i>
+              <%= status[:title] %>
+              <br>
+              <small><%= status[:sub] %></small>
+            </h4>
+            <hr>
+            <ul class="unstyled">
+              <% books.all(:status => status[:tag]).each do |b| %>
+                <li>
+                  <a style="color: #909090;" href="<%= b["url"] %>"><%= b["title"] %></a>
+                  <span class="pull-right"><%= b["rating"] %></span>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
 
       </div>
     </div>

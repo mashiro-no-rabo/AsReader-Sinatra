@@ -10,6 +10,7 @@ configure do
   set :dbapikey, "0ece318cccdac2ae2c6a94a66690480a"
   # please replace this with your own douban api key
   set :nickname, "AquarHEAD L."
+  # and your own nickname :D
 end
 
 DataMapper::setup(:default, "mysql://asreader:asreader@localhost/asreader")
@@ -38,6 +39,7 @@ class Book
   property :note_updated, DateTime
   property :started_at, DateTime
   property :ended_at, DateTime
+  property :status_changed, DateTime
 
   has n, :excerpts
 end
@@ -53,13 +55,16 @@ get '/' do
 end
 
 get '/books' do
-  wish = Book.all(:status => :wish)
-  reading = Book.all(:status => :reading)
-  finished = Book.all(:status => :finished)
-  holding = Book.all(:status => :holding)
-  dropped = Book.all(:status => :dropped)
-  reference = Book.all(:status => :reference)
-  erb :books, :locals => {nick: settings.nickname, wish: wish, reading: reading, finished: finished, holding: holding, dropped: dropped, reference: reference}
+  books = Book.all
+  stats = [ 
+    { tag: :reference, title: "Reference", sub: "As dictionaries", icon: "random"},
+    { tag: :reading, title: "Reading", sub: "To upgrade myself", icon: "book"},
+    { tag: :holding, title: "Holding", sub: "For a later time", icon: "lock"},
+    { tag: :wish, title: "Wish", sub: "Human knowledge", icon: "star"},
+    { tag: :finished, title: "Read", sub: "In the past", icon: "ok"},
+    { tag: :dropped, title: "Dropped", sub: "Just personally", icon: "remove"}
+  ]
+  erb :books, :locals => {nick: settings.nickname, books: books, stats: stats}
 end
 
 get '/import-douban/:db_user' do
@@ -80,6 +85,7 @@ get '/import-douban/:db_user' do
       bk.title = b["book"]["title"]
       bk.status = :reading
       bk.started_at = DateTime.parse(b["updated"])
+      bk.status_changed = DateTime.parse(b["updated"])
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
@@ -100,6 +106,7 @@ get '/import-douban/:db_user' do
       bk.title = b["book"]["title"]
       bk.status = :finished
       bk.ended_at = DateTime.parse(b["updated"])
+      bk.status_changed = DateTime.parse(b["updated"])
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
@@ -119,6 +126,7 @@ get '/import-douban/:db_user' do
       bk.url = b["book"]["alt"]
       bk.title = b["book"]["title"]
       bk.status = :wish
+      bk.status_changed = DateTime.parse(b["updated"])
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
