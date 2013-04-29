@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title><%= nick %> | As Reader</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+    <script src="/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn:400italic,400,700' rel='stylesheet' type='text/css'>
+  </head>
+  <body style="font-family: 'Vollkorn', serif;">
+    <div class="container-fluid">
+      <div class="row-fluid" style="margin-top: 150px;">
+        <div class="span4 offset4" style="text-align: center;">
+          <h3>
+            <%= nick %> as a Reader
+            <br>
+            <small>
+              The Voyage in Pages
+            </small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="row-fluid" style="margin-top: 50px;">
+
+        <div class="span2">
+          <h4>
+            <i class="icon-random"></i>
+            Reference
+            <br>
+            <small>As dictionaries</small>
+          </h4>
+          <hr>
+          <ul class="unstyled">
+            <% reference.each do |b| %>
+              <li>
+              <% if b["rating"] %>
+                <% if b["rating"] < 10 %>
+                  <%= b["rating"] %>
+                <% else %>
+                  !
+                <% end %>
+              <% else %>
+                -
+              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="span2">
+          <h4>
+            <i class="icon-book"></i>
+            Reading
+            <br>
+            <small>To upgrade myself</small>
+          </h4>
+          <hr>
+          <ul class="unstyled">
+            <% reading.each do |b| %>
+              <li>
+              <% if b["rating"] %>
+                <% if b["rating"] < 10 %>
+                  <%= b["rating"] %>
+                <% else %>
+                  !
+                <% end %>
+              <% else %>
+                -
+              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="span2">
+          <h4>
+            <i class="icon-lock"></i>
+            Holding
+            <br>
+            <small>For a later time</small>
+          </h4>
+          <hr>
+          <ul class="unstyled">
+            <% holding.each do |b| %>
+              <li>
+              <% if b["rating"] %>
+                <% if b["rating"] < 10 %>
+                  <%= b["rating"] %>
+                <% else %>
+                  !
+                <% end %>
+              <% else %>
+                -
+              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="span2">
+          <h4>
+            <i class="icon-star"></i>
+            Wish
+            <br>
+            <small>The ocean of human knowledge</small>
+          </h4>
+          <hr>
+          <ul class="unstyled">
+            <% wish.each do |b| %>
+              <li>
+              <% if b["rating"] %>
+                <% if b["rating"] < 10 %>
+                  <%= b["rating"] %>
+                <% else %>
+                  !
+                <% end %>
+              <% else %>
+                -
+              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="span2">
+          <h4>
+            <i class="icon-ok"></i>
+            Read
+            <br>
+            <small>In the past</small>
+          </h4>
+          <hr>
+          <ul class="unstyled">
+            <% finished.each do |b| %>
+              <li>
+              <% if b["rating"] %>
+                <% if b["rating"] < 10 %>
+                  <%= b["rating"] %>
+                <% else %>
+                  !
+                <% end %>
+              <% else %>
+                -
+              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="span2">
+          <h4>
+            <i class="icon-remove"></i>
+            Dropped
+            <br>
+            <small>Just personally</small>
+          </h4>
+          <hr>
+          <ul class="unstyled">
+            <% dropped.each do |b| %>
+              <li>
+              <% if b["rating"] %>
+                <% if b["rating"] < 10 %>
+                  <%= b["rating"] %>
+                <% else %>
+                  !
+                <% end %>
+              <% else %>
+                -
+              <% end %> <a style="color: #909090;" href="<%= b["url"] %>"><em><%= b["title"] %></em></a></li>
+            <% end %>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>
