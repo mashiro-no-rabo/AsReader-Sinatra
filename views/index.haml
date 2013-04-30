@@ -2,58 +2,33 @@
   / Left Panel
   .span2.offset2
     .pull-left
-      %hr/
-      %ul.unstyled
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-book
-            %em Version Control with Git
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-pencil
-            1234 lines of note
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-share
-            56 pieces of excerpt
-      %hr/
-      %ul.unstyled
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-remove
-            %em Version Control with Git
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-pencil
-            1234 lines of note
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-share
-            56 pieces of excerpt
-      %hr/
-      %ul.unstyled
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-lock
-            %em Version Control with Git
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-pencil
-            1234 lines of note
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-share
-            56 pieces of excerpt
+      - @books.first(3).each do |b|
+        %hr/
+        %ul.unstyled
+          %li
+            %a{:href => "/book/#{b.id}", :style => "color: #909090;"}
+              %i{:class => "icon-#{@stats[b.status][:icon]}"}
+              = b.title
+          %li
+            %a{:href => "#", :style => "color: #909090;"}
+              %i.icon-pencil
+              #{b.note.to_s.lines} lines of note
+          %li
+            %a{:href => "#", :style => "color: #909090;"}
+              %i.icon-share
+              #{b.excerpts.count} pieces of excerpt
   / End Left Panel
   / Main Content, A Random Excerpt
   .span4
     %div{:style => "border-left: 3px solid #{@colors.sample}; padding-left: 5px;"}
-      %p.lead
-        != @content
+      .lead
+        != markdown(@exp.content)
       %small.pull-right
-        %cite= @exp.book.title
+        %a{:href=> "/book/#{@exp.book.id}"}
+          %cite= @exp.book.title
         %em
-          P.#{@exp.page}
+          P.
+        = @exp.page
   / End Main Content
   / Right Panel
   .span2

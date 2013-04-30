@@ -41,7 +41,7 @@ class Book
   property :note_updated, DateTime
   property :started_at, DateTime
   property :ended_at, DateTime
-  property :status_changed, DateTime
+  property :updated, DateTime
 
   has n, :excerpts
 end
@@ -54,14 +54,14 @@ set :public_folder, File.dirname(__FILE__) + '/static'
 
 before do
   @nick = settings.nickname
-  @stats = [ 
-    { tag: :reference, title: "Reference", sub: "As dictionaries", icon: "random"},
-    { tag: :reading, title: "Reading", sub: "To upgrade myself", icon: "book"},
-    { tag: :holding, title: "Holding", sub: "For a later time", icon: "lock"},
-    { tag: :wish, title: "Wish", sub: "Human knowledge", icon: "star"},
-    { tag: :finished, title: "Read", sub: "In the past", icon: "ok"},
-    { tag: :dropped, title: "Dropped", sub: "Just personally", icon: "remove"}
-  ]
+  @stats = {
+    reference: { title: "Reference", sub: "As dictionaries", icon: "random" },
+    reading: { title: "Reading", sub: "To upgrade myself", icon: "book" },
+    holding: { title: "Holding", sub: "For a later time", icon: "lock" },
+    wish: { title: "Wish", sub: "Human knowledge", icon: "star" },
+    finished: { title: "Read", sub: "In the past", icon: "ok" },
+    dropped: { title: "Dropped", sub: "Just personally", icon: "remove" }
+  }
   @colors = [
     "#F3F781",
     "#CED8F6"
@@ -70,28 +70,27 @@ end
 
 get '/' do
   @exp = Excerpt.all.sample
-  markdown = RDiscount.new(@exp.content)
-  @content = markdown.to_html
+  @books = Book.all( :order => [ :updated.desc ] ).first(6)
   haml :index
 end
 
 get '/books' do
   @books = Book.all
-  erb :books
+  haml :books
 end
 
 get '/book/:book_id/change_status/:status' do
   bk = Book.get(params[:book_id])
   bk.status = params[:status].intern
-  bk.status_changed = DateTime.now
+  bk.updated = DateTime.now
   bk.save
   redirect back
 end
 
 get '/book/:book_id' do
   @book = Book.get(params[:book_id])
-  @nc_stats = @stats.dup.delete_if { |x| x[:tag] == @book.status }
-  erb :detail
+  @nc_stats = @stats.dup.delete_if { |k, v| k == @book.status }
+  haml :detail
 end
 
 post '/book/:book_id/excerpt' do
@@ -101,6 +100,8 @@ post '/book/:book_id/excerpt' do
   exp.content = params[:content]
   exp.page = params[:page]
   exp.save
+  @book.updated = DateTime.now
+  @book.save
   redirect back
 end
 
@@ -122,7 +123,7 @@ get '/import-douban/:db_user' do
       bk.title = b["book"]["title"]
       bk.status = :reading
       bk.started_at = DateTime.parse(b["updated"])
-      bk.status_changed = DateTime.parse(b["updated"])
+      bk.updated = DateTime.parse(b["updated"])
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
@@ -143,7 +144,7 @@ get '/import-douban/:db_user' do
       bk.title = b["book"]["title"]
       bk.status = :finished
       bk.ended_at = DateTime.parse(b["updated"])
-      bk.status_changed = DateTime.parse(b["updated"])
+      bk.updated = DateTime.parse(b["updated"])
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
@@ -163,7 +164,7 @@ get '/import-douban/:db_user' do
       bk.url = b["book"]["alt"]
       bk.title = b["book"]["title"]
       bk.status = :wish
-      bk.status_changed = DateTime.parse(b["updated"])
+      bk.updated = DateTime.parse(b["updated"])
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
@@ -172,5 +173,5 @@ get '/import-douban/:db_user' do
     start += 100
   end until start >= wish_data["total"]
 
-  "Finished."
+  redirect "/books"
 end
