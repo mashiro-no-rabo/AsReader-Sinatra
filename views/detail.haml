@@ -22,7 +22,17 @@
 .row-fluid
   .span4.offset4
     %form#add-excerpt{:action => "/book/#{@book["id"]}/excerpt", :method => "post"}
-      %textarea.input-block-level{:name => "content", :rows => "8"}
+      %textarea#content.input-block-level{:name => "content", :rows => "8"}
+      :javascript
+        key.filter = function(event) {
+          return true;
+        }
+        key('shift+enter', function() {
+          $('#content').val($('#content').val() + "  ");
+        });
+        key('command+enter, ctrl+enter', function() {
+          $("#add-excerpt").submit();
+        });
       %span.form-inline
         %input.input-mini{:name => "page", :placeholder => "Page", :type => "text"}/
         %button.btn{:type => "submit"} Add Excerpt
