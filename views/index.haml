@@ -1,0 +1,103 @@
+.row-fluid{:style => "margin-top: 10%;"}
+  / Left Panel
+  .span2.offset2
+    .pull-left
+      %hr/
+      %ul.unstyled
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-book
+            %em Version Control with Git
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-pencil
+            1234 lines of note
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-share
+            56 pieces of excerpt
+      %hr/
+      %ul.unstyled
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-remove
+            %em Version Control with Git
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-pencil
+            1234 lines of note
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-share
+            56 pieces of excerpt
+      %hr/
+      %ul.unstyled
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-lock
+            %em Version Control with Git
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-pencil
+            1234 lines of note
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-share
+            56 pieces of excerpt
+  / End Left Panel
+  / Main Content, A Random Excerpt
+  .span4
+    %div{:style => "border-left: 3px solid #{@colors.sample}; padding-left: 5px;"}
+      %p.lead
+        != @content
+      %small.pull-right
+        %cite= @exp.book.title
+        %em
+          P.#{@exp.page}
+  / End Main Content
+  / Right Panel
+  .span2
+    .pull-right
+      %hr/
+      %ul.unstyled
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-ok
+            %em Version Control with Git
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-pencil
+            1234 lines of note
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-share
+            56 pieces of excerpt
+      %hr/
+      %ul.unstyled
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-star
+            %em Version Control with Git
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-pencil
+            1234 lines of note
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-share
+            56 pieces of excerpt
+      %hr/
+      %ul.unstyled
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-random
+            %em Version Control with Git
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-pencil
+            1234 lines of note
+        %li
+          %a{:href => "#", :style => "color: #909090;"}
+            %i.icon-share
+            56 pieces of excerpt
+  / End Right Panel

@@ -5,6 +5,8 @@ require 'net/http'
 require 'net/https'
 require 'json'
 require 'date'
+require 'dm-aggregates'
+require 'rdiscount'
 
 configure do
   set :dbapikey, "0ece318cccdac2ae2c6a94a66690480a"
@@ -50,13 +52,9 @@ DataMapper.auto_upgrade!
 
 set :public_folder, File.dirname(__FILE__) + '/static'
 
-get '/' do
-  erb :index, :locals => {nick: settings.nickname}
-end
-
-get '/books' do
-  books = Book.all
-  stats = [ 
+before do
+  @nick = settings.nickname
+  @stats = [ 
     { tag: :reference, title: "Reference", sub: "As dictionaries", icon: "random"},
     { tag: :reading, title: "Reading", sub: "To upgrade myself", icon: "book"},
     { tag: :holding, title: "Holding", sub: "For a later time", icon: "lock"},
@@ -64,7 +62,22 @@ get '/books' do
     { tag: :finished, title: "Read", sub: "In the past", icon: "ok"},
     { tag: :dropped, title: "Dropped", sub: "Just personally", icon: "remove"}
   ]
-  erb :books, :locals => {nick: settings.nickname, books: books, stats: stats}
+  @colors = [
+    "#F3F781",
+    "#CED8F6"
+  ]
+end
+
+get '/' do
+  @exp = Excerpt.all.sample
+  markdown = RDiscount.new(@exp.content)
+  @content = markdown.to_html
+  haml :index
+end
+
+get '/books' do
+  @books = Book.all
+  erb :books
 end
 
 get '/book/:book_id/change_status/:status' do
@@ -72,6 +85,22 @@ get '/book/:book_id/change_status/:status' do
   bk.status = params[:status].intern
   bk.status_changed = DateTime.now
   bk.save
+  redirect back
+end
+
+get '/book/:book_id' do
+  @book = Book.get(params[:book_id])
+  @nc_stats = @stats.dup.delete_if { |x| x[:tag] == @book.status }
+  erb :detail
+end
+
+post '/book/:book_id/excerpt' do
+  @book = Book.get(params[:book_id])
+  exp = Excerpt.new
+  exp.book = @book
+  exp.content = params[:content]
+  exp.page = params[:page]
+  exp.save
   redirect back
 end
 

@@ -1,0 +1,28 @@
+.row-fluid{:style => "margin-top: 150px;"}
+  .span4.offset4{:style => "text-align: center;"}
+    %h3
+      = @nick
+      as a Reader
+      %br/
+      %small
+        The Voyage in Pages
+.row-fluid{:style => "margin-top: 50px;"}
+  - @stats.each_with_index do |status, index|
+    .span2
+      %h4
+        %i{:class => "icon-#{status[:icon]}"}
+        = status[:title]
+        %br/
+        %small= status[:sub]
+      %hr/
+      %ul.unstyled
+        - @books.all(:status => status[:tag], :order => [ :status_changed.desc ]).each do |b|
+          %li
+            - if index > 0
+              %a{:href => "/book/#{b["id"]}/change_status/#{@stats[index-1][:tag].to_s}"} <
+            %a{:href => "/book/#{b["id"]}", :style => "color: #909090;"}
+              = b["title"]
+            - if index + 1 < @stats.length
+              %a{:href => "/book/#{b["id"]}/change_status/#{@stats[index+1][:tag].to_s}"} >
+            %span.pull-right= b["rating"]
+            %span.clearfix

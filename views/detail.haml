@@ -1,0 +1,41 @@
+.row-fluid{:style => "margin-top: 50px;"}
+  .span4.offset4{:style => "text-align: center;"}
+    %h3
+      = @book["title"]
+    .btn-toolbar
+      .btn-group
+        %a.btn.btn-warning.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+          %i{:class => "icon-#{(@stats - @nc_stats)[0][:icon]}"}
+          = (@stats - @nc_stats)[0][:title]
+          %span.caret
+        %ul.dropdown-menu{:style => "text-align: left;"}
+          - @nc_stats.each do |status|
+            %li
+              %a{:href => "/book/#{@book["id"]}/change_status/#{status[:tag]}"}
+                %i{:class => "icon-#{status[:icon]}"}
+                = status[:title]
+      .btn-group
+        %a.btn.btn-success{:href => "#"} Notes
+      .btn-group
+        %a.btn.btn-info{:href => @book["url"]} More Info
+    %hr/
+.row-fluid
+  .span4.offset4
+    %form{:action => "/book/#{@book["id"]}/excerpt", :method => "post"}
+      %textarea.input-block-level{:name => "content", :rows => "8"}
+      %span.form-inline
+        %input.input-mini{:name => "page", :placeholder => "Page", :type => "text"}/
+        %button.btn{:type => "submit"} Add Excerpt
+        %span.pull-right
+          Hit
+          %code ⌘+Enter
+          to submit.
+.row-fluid
+  .span4.offset4
+    - @book.excerpts.all( :order => [ :page.desc ]).each_with_index do |exp, index|
+      <div style="border-left: 3px solid #{@colors[index % @colors.length]}; padding-left: 5px; margin-top: 20px;"
+      %small
+        %em
+          P.#{exp.page}
+      %p.lead
+        = markdown(exp.content)
