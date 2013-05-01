@@ -16,8 +16,9 @@
                 = value[:title]
       .btn-group
         %a.btn.btn-success{:href => "#"} Notes
+        %a.btn.btn-success{:href => @book["url"]} More Info
       .btn-group
-        %a.btn.btn-info{:href => @book["url"]} More Info
+        %a.btn.btn-info{:href => "/books"} All Books
     %hr/
 .row-fluid
   .span4.offset4

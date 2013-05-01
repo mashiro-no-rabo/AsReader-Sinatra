@@ -12,7 +12,7 @@
           %li
             %a{:href => "#", :style => "color: #909090;"}
               %i.icon-pencil
-              #{b.note.to_s.lines} lines of note
+              #{b.note.to_s.lines.count} lines of note
           %li
             %a{:href => "#", :style => "color: #909090;"}
               %i.icon-share
@@ -33,46 +33,19 @@
   / Right Panel
   .span2
     .pull-right
-      %hr/
-      %ul.unstyled
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-ok
-            %em Version Control with Git
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-pencil
-            1234 lines of note
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-share
-            56 pieces of excerpt
-      %hr/
-      %ul.unstyled
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-star
-            %em Version Control with Git
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-pencil
-            1234 lines of note
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-share
-            56 pieces of excerpt
-      %hr/
-      %ul.unstyled
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-random
-            %em Version Control with Git
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-pencil
-            1234 lines of note
-        %li
-          %a{:href => "#", :style => "color: #909090;"}
-            %i.icon-share
-            56 pieces of excerpt
+      - @books.last(3).each do |b|
+        %hr/
+        %ul.unstyled
+          %li
+            %a{:href => "/book/#{b.id}", :style => "color: #909090;"}
+              %i{:class => "icon-#{@stats[b.status][:icon]}"}
+              = b.title
+          %li
+            %a{:href => "#", :style => "color: #909090;"}
+              %i.icon-pencil
+              #{b.note.to_s.lines.count} lines of note
+          %li
+            %a{:href => "#", :style => "color: #909090;"}
+              %i.icon-share
+              #{b.excerpts.count} pieces of excerpt
   / End Right Panel
