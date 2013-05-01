@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'rubygems'
 require 'sinatra'
 require 'data_mapper'
@@ -58,10 +60,23 @@ before do
     reference: { title: "Reference", sub: "As dictionaries", icon: "random" },
     reading: { title: "Reading", sub: "To upgrade myself", icon: "book" },
     holding: { title: "Holding", sub: "For a later time", icon: "lock" },
-    wish: { title: "Wish", sub: "Human knowledge", icon: "star" },
+    wish: { title: "Wish", sub: "Human knowledge", icon: "bookmark" },
     finished: { title: "Read", sub: "In the past", icon: "ok" },
     dropped: { title: "Dropped", sub: "Just personally", icon: "remove" }
   }
+  @stats_array = @stats.keys
+  @rating_str = [
+    "天雷",
+    "巨雷",
+    "雷",
+    "较雷",
+    "不过不失",
+    "还行",
+    "推荐",
+    "力荐",
+    "神作",
+    "超神作"
+  ]
   @colors = [
     "#F3F781",
     "#CED8F6"
@@ -70,16 +85,16 @@ end
 
 get '/' do
   @exp = Excerpt.all.sample
-  @books = Book.all( :order => [ :updated.desc ] ).first(6)
+  @books = Book.all( :order => [ :updated.desc ] )
   haml :index
 end
 
-get '/books' do
+get '/books/?' do
   @books = Book.all
   haml :books
 end
 
-get '/book/:book_id/change_status/:status' do
+get '/book/:book_id/change_status/:status/?' do
   bk = Book.get(params[:book_id])
   bk.status = params[:status].intern
   bk.updated = DateTime.now
@@ -87,13 +102,25 @@ get '/book/:book_id/change_status/:status' do
   redirect back
 end
 
-get '/book/:book_id' do
+get '/book/:book_id/rate/:rating/?' do
+  bk = Book.get(params[:book_id])
+  bk.rating = params[:rating].to_i
+  if bk.rating < 1
+    bk.rating = 1
+  if bk.rating > @rating_str.length
+    bk.rating = @rating_str.length
+  bk.updated = DateTime.now
+  bk.save
+  redirect back
+end
+
+get '/book/:book_id/?' do
   @book = Book.get(params[:book_id])
   @nc_stats = @stats.dup.delete_if { |k, v| k == @book.status }
   haml :detail
 end
 
-post '/book/:book_id/excerpt' do
+post '/book/:book_id/excerpt/?' do
   @book = Book.get(params[:book_id])
   exp = Excerpt.new
   exp.book = @book
@@ -105,7 +132,7 @@ post '/book/:book_id/excerpt' do
   redirect back
 end
 
-get '/import-douban/:db_user' do
+get '/import-douban/:db_user/?' do
 
   uri = URI.parse("https://api.douban.com/")
   request = Net::HTTP.new(uri.host, uri.port)

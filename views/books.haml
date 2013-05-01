@@ -5,20 +5,30 @@
       as a Reader
       %br/
       %small
-        The Voyage in Pages
+        The
+        = surround '_', '_' do
+          %a{:href => "/"}
+            Voyage
+        in Pages
 .row-fluid{:style => "margin-top: 50px;"}
-  - @stats.each_pair do |status, value|
+  - @stats_array.each_with_index do |status, index|
     .span2
       %h4
-        %i{:class => "icon-#{value[:icon]}"}
-        = value[:title]
+        %i{:class => "icon-#{@stats[status][:icon]}"}
+        = @stats[status][:title]
         %br/
-        %small= value[:sub]
+        %small= @stats[status][:sub]
       %hr/
       %ul.unstyled
         - @books.all(:status => status, :order => [ :updated.desc ]).each do |b|
           %li
-            %a{:href => "/book/#{b["id"]}", :style => "color: #909090;"}
+            - if index > 0
+              %a{:href => "/book/#{b["id"]}/change_status/#{@stats_array[index-1].to_s}/"}
+                <
+            %a{:href => "/book/#{b["id"]}/", :style => "color: #909090;"}
               = b["title"]
+            - if index+1 < @stats_array.length
+              %a{:href => "/book/#{b["id"]}/change_status/#{@stats_array[index+1].to_s}/"}
+                >
             %span.pull-right= b["rating"]
             %span.clearfix

@@ -4,27 +4,48 @@
       = @book["title"]
     .btn-toolbar
       .btn-group
-        %a.btn.btn-warning.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+        %a.btn.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
           %i{:class => "icon-#{@stats[@book.status][:icon]}"}
           = @stats[@book.status][:title]
           %span.caret
         %ul.dropdown-menu{:style => "text-align: left;"}
           - @nc_stats.each_pair do |status, value|
             %li
-              %a{:href => "/book/#{@book["id"]}/change_status/#{status}"}
+              %a{:href => "/book/#{@book["id"]}/change_status/#{status}/"}
                 %i{:class => "icon-#{value[:icon]}"}
                 = value[:title]
       .btn-group
-        %a.btn.btn-success{:href => "#"} Notes
-        %a.btn.btn-success{:href => @book["url"]} More Info
+        %a.btn.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+          - if @book.rating
+            = @rating_str[@book.rating-1]
+          - else
+            Rate
+          %span.caret
+        %ul.dropdown-menu{:style => "text-align: left;"}
+          - 10.downto(1) do |x|
+            %li
+              %a{:href => "/book/#{@book["id"]}/rate/#{x}/"}
+                = surround '[', '] ' do
+                  = x
+                = @rating_str[x-1]
       .btn-group
-        %a.btn.btn-info{:href => "/books"} All Books
+        %a.btn{:href => "#"} Notes
+        %a.btn{:href => @book["url"]} More Info
+      .btn-group
+        %a.btn{:href => "/books/"} All Books
     %hr/
 .row-fluid
   .span4.offset4
-    %form#add-excerpt{:action => "/book/#{@book["id"]}/excerpt", :method => "post"}
+    %form#add-excerpt{:action => "/book/#{@book["id"]}/excerpt/", :method => "post"}
       %textarea#content.input-block-level{:name => "content", :rows => "8"}
-      :javascript
+      %span.form-inline
+        %input.input-mini{:name => "page", :placeholder => "Page", :type => "text"}/
+        %button.btn{:type => "submit"} Add Excerpt
+        %span.pull-right
+          Hit
+          %code ⌘+Enter
+          to submit.
+:javascript
         key.filter = function(event) {
           return true;
         }
@@ -34,13 +55,6 @@
         key('command+enter, ctrl+enter', function() {
           $("#add-excerpt").submit();
         });
-      %span.form-inline
-        %input.input-mini{:name => "page", :placeholder => "Page", :type => "text"}/
-        %button.btn{:type => "submit"} Add Excerpt
-        %span.pull-right
-          Hit
-          %code ⌘+Enter
-          to submit.
 .row-fluid
   .span4.offset4
     - @book.excerpts.all( :order => [ :page.desc ]).each_with_index do |exp, index|

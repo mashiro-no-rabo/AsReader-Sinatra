@@ -6,7 +6,7 @@
         %hr/
         %ul.unstyled
           %li
-            %a{:href => "/book/#{b.id}", :style => "color: #909090;"}
+            %a{:href => "/book/#{b.id}/", :style => "color: #909090;"}
               %i{:class => "icon-#{@stats[b.status][:icon]}"}
               = b.title
           %li
@@ -14,7 +14,7 @@
               %i.icon-pencil
               #{b.note.to_s.lines.count} lines of note
           %li
-            %a{:href => "#", :style => "color: #909090;"}
+            %a{:href => "/book/#{b.id}/", :style => "color: #909090;"}
               %i.icon-share
               #{b.excerpts.count} pieces of excerpt
   / End Left Panel
@@ -24,7 +24,7 @@
       .lead
         != markdown(@exp.content)
       %small.pull-right
-        %a{:href=> "/book/#{@exp.book.id}"}
+        %a{:href=> "/book/#{@exp.book.id}/"}
           %cite= @exp.book.title
         %em
           P.
@@ -33,11 +33,11 @@
   / Right Panel
   .span2
     .pull-right
-      - @books.last(3).each do |b|
+      - @books[3, 3].each do |b|
         %hr/
         %ul.unstyled
           %li
-            %a{:href => "/book/#{b.id}", :style => "color: #909090;"}
+            %a{:href => "/book/#{b.id}/", :style => "color: #909090;"}
               %i{:class => "icon-#{@stats[b.status][:icon]}"}
               = b.title
           %li
@@ -48,4 +48,7 @@
             %a{:href => "#", :style => "color: #909090;"}
               %i.icon-share
               #{b.excerpts.count} pieces of excerpt
+      %small
+        %a{:href => "/books/"}
+          View all books
   / End Right Panel
