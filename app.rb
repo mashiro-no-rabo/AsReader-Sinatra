@@ -34,7 +34,7 @@ class Book
   include DataMapper::Resource
 
   property :id, Serial
-  property :douban_id, String
+  property :douban_id, String, :unique => true
   property :url, URI
   property :title, String
   property :status, Enum[ :wish, :reading, :finished, :holding, :dropped, :reference]
@@ -107,8 +107,10 @@ get '/book/:book_id/rate/:rating/?' do
   bk.rating = params[:rating].to_i
   if bk.rating < 1
     bk.rating = 1
+  end
   if bk.rating > @rating_str.length
     bk.rating = @rating_str.length
+  end
   bk.updated = DateTime.now
   bk.save
   redirect back
