@@ -57,7 +57,7 @@
         });
 .row-fluid
   .span4.offset4
-    - @book.excerpts.all( :order => [ :page.desc ]).each_with_index do |exp, index|
+    - @book.excerpts.all( :order => [ :created_at.desc ]).each_with_index do |exp, index|
       %div{:style => "border-left: 3px solid #{@colors[index % @colors.length]}; padding-left: 5px; margin-top: 20px;"}
         %small
           %em
