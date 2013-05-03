@@ -144,63 +144,31 @@ get '/import-douban/:db_user/?' do
   start = 0
   begin
     resp = request.get("/v2/book/user/#{params[:db_user]}/collections?status=reading&start=#{start}&count=100&apikey=#{settings.dbapikey}")
-    reading_data = JSON.parse(resp.body)
-    reading_data["collections"].each do |b|
+    data = JSON.parse(resp.body)
+    data["collections"].each do |b|
       bk = Book.new
       bk.douban_id = b["book"]["id"]
       bk.url = b["book"]["alt"]
       bk.title = b["book"]["title"]
-      bk.status = :reading
-      bk.started_at = DateTime.parse(b["updated"])
-      bk.updated = DateTime.parse(b["updated"])
+      if b["status"] == "reading"
+        bk.status = :reading
+        bk.started_at = DateTime.parse(b["updated"])
+        bk.updated = DateTime.parse(b["updated"])
+      elsif b["status"] == "read"
+        bk.status = :finished
+        bk.ended_at = DateTime.parse(b["updated"])
+        bk.updated = DateTime.parse(b["updated"])
+      else
+        bk.status = :wish
+        bk.updated = DateTime.parse(b["updated"])
+      end
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
       bk.save
     end
     start += 100
-  end until start >= reading_data["total"]
-
-  # Add finished books
-  start = 0
-  begin
-    resp = request.get("/v2/book/user/#{params[:db_user]}/collections?status=read&start=#{start}&count=100&apikey=#{settings.dbapikey}")
-    read_data = JSON.parse(resp.body)
-    read_data["collections"].each do |b|
-      bk = Book.new
-      bk.douban_id = b["book"]["id"]
-      bk.url = b["book"]["alt"]
-      bk.title = b["book"]["title"]
-      bk.status = :finished
-      bk.ended_at = DateTime.parse(b["updated"])
-      bk.updated = DateTime.parse(b["updated"])
-      if b.has_key? "rating"
-        bk.rating = b["rating"]["value"].to_i * 2
-      end
-      bk.save
-    end
-    start += 100
-  end until start >= read_data["total"]
-
-  # Add wish books
-  start = 0
-  begin
-    resp = request.get("/v2/book/user/#{params[:db_user]}/collections?status=wish&start=#{start}&count=100&apikey=#{settings.dbapikey}")
-    wish_data = JSON.parse(resp.body)
-    wish_data["collections"].each do |b|
-      bk = Book.new
-      bk.douban_id = b["book"]["id"]
-      bk.url = b["book"]["alt"]
-      bk.title = b["book"]["title"]
-      bk.status = :wish
-      bk.updated = DateTime.parse(b["updated"])
-      if b.has_key? "rating"
-        bk.rating = b["rating"]["value"].to_i * 2
-      end
-      bk.save
-    end
-    start += 100
-  end until start >= wish_data["total"]
+  end until start >= data["total"]
 
   redirect "/books"
 end
