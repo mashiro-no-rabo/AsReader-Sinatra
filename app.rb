@@ -151,15 +151,13 @@ get '/import-douban/:db_user/?' do
       if b["status"] == "reading"
         bk.status = :reading
         bk.started_at = DateTime.parse(b["updated"])
-        bk.updated = DateTime.parse(b["updated"])
       elsif b["status"] == "read"
         bk.status = :finished
         bk.ended_at = DateTime.parse(b["updated"])
-        bk.updated = DateTime.parse(b["updated"])
       else
         bk.status = :wish
-        bk.updated = DateTime.parse(b["updated"])
       end
+      bk.updated = DateTime.parse(b["updated"])
       if b.has_key? "rating"
         bk.rating = b["rating"]["value"].to_i * 2
       end
