@@ -52,8 +52,6 @@ DataMapper.finalize
 
 DataMapper.auto_upgrade!
 
-set :public_folder, File.dirname(__FILE__) + '/static'
-
 before do
   @nick = settings.nickname
   @stats = {
