@@ -141,7 +141,7 @@ get '/import-douban/:db_user/?' do
   # Add reading books
   start = 0
   begin
-    resp = request.get("/v2/book/user/#{params[:db_user]}/collections?status=reading&start=#{start}&count=100&apikey=#{settings.dbapikey}")
+    resp = request.get("/v2/book/user/#{params[:db_user]}/collections?start=#{start}&count=100&apikey=#{settings.dbapikey}")
     data = JSON.parse(resp.body)
     data["collections"].each do |b|
       bk = Book.new
