@@ -22,13 +22,7 @@
       %ul.unstyled
         - @books.all(:status => status, :order => [ :updated.desc ]).each do |b|
           %li
-            - if index > 0
-              %a{:href => "/book/#{b["id"]}/change_status/#{@stats_array[index-1].to_s}/"}
-                <
             %a{:href => "/book/#{b["id"]}/", :style => "color: #909090;"}
               = b["title"]
-            - if index+1 < @stats_array.length
-              %a{:href => "/book/#{b["id"]}/change_status/#{@stats_array[index+1].to_s}/"}
-                >
             %span.pull-right= b["rating"]
             %span.clearfix
