@@ -15,6 +15,8 @@ configure do
   # please replace this with your own douban api key
   set :nickname, "AquarHEAD L."
   # and your own nickname :D
+  set :noteRepo, "AquarHEAD/AsReader-Notes"
+  # also create a github repo for markdown notes lol
 end
 
 DataMapper::setup(:default, "mysql://asreader:asreader@localhost/asreader")
@@ -39,8 +41,7 @@ class Book
   property :title, String
   property :status, Enum[ :wish, :reading, :finished, :holding, :dropped, :reference]
   property :rating, Integer
-  property :note, Text
-  property :note_updated, DateTime
+  property :note_name, String, :default => ""
   property :started_at, DateTime
   property :ended_at, DateTime
   property :updated, DateTime
@@ -79,6 +80,7 @@ before do
     "#F3F781",
     "#CED8F6"
   ]
+  @repo = settings.noteRepo
 end
 
 get '/' do
