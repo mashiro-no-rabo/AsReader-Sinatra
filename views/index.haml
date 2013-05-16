@@ -46,9 +46,14 @@
               %i{:class => "icon-#{@stats[b.status][:icon]}"}
               = b.title
           %li
-            %a{:href => "#", :style => "color: #909090;"}
-              %i.icon-pencil
-              #{b.note.to_s.lines.count} lines of note
+            - if b.note_name.length > 0
+              %a{:href => "https://github.com/#{@repo}/edit/master#{@book.note_string}", :style => "color: #909090;"}
+                %i.icon-pencil
+                Write note
+            - else
+              %a{:href => "https://github.com/#{@repo}/new/master", :style => "color: #909090;"}
+                %i.icon-pencil
+                Create note
           %li
             %a{:href => "#", :style => "color: #909090;"}
               %i.icon-share
