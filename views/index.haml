@@ -10,7 +10,7 @@
               %i{:class => "icon-#{@stats[b.status][:icon]}"}
               = b.title
           %li
-            - if @book.note_string.length > 0
+            - if @book.note_name.length > 0
               %a{:href => "https://github.com/#{@repo}/edit/master#{@book.note_string}", :style => "color: #909090;"}
                 %i.icon-pencil
                 Write note
